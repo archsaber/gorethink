@@ -29,9 +29,9 @@ func init() {
 		url = "localhost:28015"
 	}
 
-	url2 = os.Getenv("RETHINKDB_URL_1")
-	if url2 == "" {
-		url2 = "localhost:28016"
+	url1 = os.Getenv("RETHINKDB_URL_1")
+	if url1 == "" {
+		url1 = "localhost:28016"
 	}
 
 	url2 = os.Getenv("RETHINKDB_URL_2")
@@ -48,9 +48,6 @@ func init() {
 	if db == "" {
 		db = "test"
 	}
-
-	// Needed for running tests for RethinkDB with a non-empty authkey
-	authKey = os.Getenv("RETHINKDB_AUTHKEY")
 }
 
 //
@@ -60,7 +57,6 @@ func testSetup(m *testing.M) {
 	var err error
 	session, err = Connect(ConnectOpts{
 		Address: url,
-		AuthKey: authKey,
 	})
 	if err != nil {
 		Log.Fatalln(err.Error())
@@ -241,6 +237,23 @@ var str = T{
 			"XE1", "XE2",
 		},
 	},
+}
+
+type Author struct {
+	ID   string `gorethink:"id,omitempty"`
+	Name string `gorethink:"name"`
+}
+
+type Book struct {
+	ID     string `gorethink:"id,omitempty"`
+	Title  string `gorethink:"title"`
+	Author Author `gorethink:"author_id,reference" gorethink_ref:"id"`
+}
+
+type TagsTest struct {
+	A string `gorethink:"a"`
+	B string `json:"b"`
+	C string `gorethink:"c1" json:"c2"`
 }
 
 func (s *RethinkSuite) BenchmarkExpr(c *test.C) {
