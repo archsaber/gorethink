@@ -16,7 +16,7 @@ import (
 
 	"golang.org/x/crypto/pbkdf2"
 
-	p "gopkg.in/dancannon/gorethink.v2/ql2"
+	p "gopkg.in/gorethink/gorethink.v2/ql2"
 )
 
 type HandshakeVersion int
@@ -440,9 +440,9 @@ func (c *connectionHandshakeV1_0) serverSignature(saltedPass []byte) string {
 func (c *connectionHandshakeV1_0) handshakeError(code int, message string) error {
 	if code >= 10 || code <= 20 {
 		return RQLAuthError{RQLDriverError{rqlError(message)}}
-	} else {
-		return RQLDriverError{rqlError(message)}
 	}
+
+	return RQLDriverError{rqlError(message)}
 }
 
 func (c *connectionHandshakeV1_0) hashFunc() func() hash.Hash {
