@@ -1,15 +1,15 @@
 # GoRethink - RethinkDB Driver for Go
 
-[![GitHub tag](https://img.shields.io/github/tag/gorethink/gorethink.svg?style=flat)](https://github.com/gorethink/gorethink/releases)
-[![GoDoc](https://godoc.org/github.com/gorethink/gorethink?status.png)](https://godoc.org/github.com/gorethink/gorethink)
-[![build status](https://img.shields.io/travis/gorethink/gorethink/master.svg "build status")](https://travis-ci.org/gorethink/gorethink)
+[![GitHub tag](https://img.shields.io/github/tag/GoRethink/gorethink.svg?style=flat)](https://github.com/GoRethink/gorethink/releases)
+[![GoDoc](https://godoc.org/github.com/GoRethink/gorethink?status.svg)](https://godoc.org/github.com/GoRethink/gorethink)
+[![Build status](https://travis-ci.org/GoRethink/gorethink.svg?branch=master)](https://travis-ci.org/GoRethink/gorethink)
 [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 [Go](http://golang.org/) driver for [RethinkDB](http://www.rethinkdb.com/)
 
 ![GoRethink Logo](https://raw.github.com/wiki/gorethink/gorethink/gopher-and-thinker-s.png "Golang Gopher and RethinkDB Thinker")
 
-Current version: v3.0.0 (RethinkDB v2.3)
+Current version: v3.0.2 (RethinkDB v2.3)
 
 This project is no longer maintained, for more information see the [v3.0.0 release](https://github.com/gorethink/gorethink/releases/tag/v3.0.0)
 
@@ -20,14 +20,10 @@ If you need any help you can find me on the [RethinkDB slack](http://slack.rethi
 ## Installation
 
 ```
-go get gopkg.in/gorethink/gorethink.v2
+go get gopkg.in/gorethink/gorethink.v3
 ```
 
-(Or v1)
-
-```sh
-go get gopkg.in/gorethink/gorethink.v1
-```
+Replace `v3` with `v2` or `v1` to use previous versions.
 
 ## Example
 
@@ -39,7 +35,7 @@ import (
 	"fmt"
 	"log"
 
-	r "gopkg.in/gorethink/gorethink.v2"
+	r "gopkg.in/gorethink/gorethink.v3"
 )
 
 func Example() {
@@ -421,26 +417,26 @@ Here is an example that shows how to mock a query that returns multiple rows and
 
 ```go
 func TestSomething(t *testing.T) {
-    mock := r.NewMock()
-    mock.on(r.Table("people")).Return([]interface{}{
-        map[string]interface{}{"id": 1, "name": "John Smith"},
-        map[string]interface{}{"id": 2, "name": "Jane Smith"},
-    }, nil)
+	mock := r.NewMock()
+	mock.On(r.Table("people")).Return([]interface{}{
+		map[string]interface{}{"id": 1, "name": "John Smith"},
+		map[string]interface{}{"id": 2, "name": "Jane Smith"},
+	}, nil)
 
-    cursor, err := r.Table("people").Run(mock)
-    if err != nil {
-        t.Errorf(err)
-    }
+	cursor, err := r.Table("people").Run(mock)
+	if err != nil {
+		t.Errorf("err is: %v", err)
+	}
 
-    var rows []interface{}
-    err := res.All(&rows)
-    if err != nil {
-        t.Errorf(err)
-    }
+	var rows []interface{}
+	err = cursor.All(&rows)
+	if err != nil {
+		t.Errorf("err is: %v", err)
+	}
 
-    // Test result of rows
+	// Test result of rows
 
-    mock.AssertExpectations(t)
+	mock.AssertExpectations(t)
 }
 ```
 

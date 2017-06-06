@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	p "gopkg.in/gorethink/gorethink.v2/ql2"
+	p "gopkg.in/gorethink/gorethink.v3/ql2"
 )
 
 // A Session represents a connection to a RethinkDB cluster and should be used
@@ -170,8 +170,8 @@ func (o CloseOpts) toMap() map[string]interface{} {
 
 // IsConnected returns true if session has a valid connection.
 func (s *Session) IsConnected() bool {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 
 	if s.cluster == nil || s.closed {
 		return false
